@@ -9,7 +9,7 @@ abstract class Animal {
   }
 }
 
-class Snake extends Animal {
+export class Snake extends Animal {
   constructor(name: string) {
     super(name);
   }
@@ -20,7 +20,7 @@ class Snake extends Animal {
   }
 }
 
-class Pony extends Animal {
+export class Pony extends Animal {
   constructor(name: string) {
     super(name);
   }
@@ -30,6 +30,7 @@ class Pony extends Animal {
   }
 }
 
+/*
 const sammy = new Snake("Sammy la serpiente");
 sammy.move();
 
@@ -41,3 +42,4 @@ pokey.move(8);
 
 console.log(`Posicion final de Sammy: ${sammy.distance}m`);
 console.log(`Posicion final de Pokey: ${pokey.distance}m`);
+*/

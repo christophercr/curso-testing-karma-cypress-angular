@@ -6,7 +6,7 @@
  *
  * @returns La cadena formateada con horas, minutos y segundos
  */
-function secondsToHMS(seconds: number, twoDigitsHMS = false): string {
+export function secondsToHMS(seconds: number, twoDigitsHMS = false): string {
   const numericSeconds = Number(seconds);
   const h = Math.floor(numericSeconds / 3_600);
   const m = Math.floor((numericSeconds % 3_600) / 60);
@@ -29,6 +29,8 @@ function secondsToHMS(seconds: number, twoDigitsHMS = false): string {
   return hDisplay + mDisplay + sDisplay;
 }
 
+/*
 const seconds = 3_600;
 const time = secondsToHMS(seconds);
 console.log(`${seconds} segundos equivalen a "${time}"`);
+*/

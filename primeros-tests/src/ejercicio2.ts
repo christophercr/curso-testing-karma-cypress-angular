@@ -7,7 +7,7 @@
  *
  * @returns El nuevo array que contiene solo aquellos elementos del `newArray` que no existen ya en el `existingArray`
  */
-function removeDuplicatesByKey<T>(newArray: T[] | undefined, existingArray: T[], uniqueKey: keyof T): T[] {
+export function removeDuplicatesByKey<T>(newArray: T[] | undefined, existingArray: T[], uniqueKey: keyof T): T[] {
   if (!newArray || newArray.length === 0) {
     return [];
   }
@@ -23,6 +23,7 @@ function removeDuplicatesByKey<T>(newArray: T[] | undefined, existingArray: T[],
   });
 }
 
+/*
 const firstArray = [
   { id: 1, name: "primero" },
   { id: 3, name: "tercero" },
@@ -41,3 +42,4 @@ console.log(
   "Elementos de secondArray que no están en firstArray",
   uniqueArray.map((item) => item.id),
 );
+*/
