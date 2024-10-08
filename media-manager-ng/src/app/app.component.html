@@ -1,0 +1,19 @@
+<!--<button type="button" (click)="toggleComponent()" [class]="prueba[0]" (buttonHovered)="onButtonHovered($event)">Toggle Component</button>-->
+
+<!-- TODO: refactorizar directiva appIfViewport para poder definir varios viewports y no solo uno -->
+<!--
+<div *appIfViewport="['Medium', 'Large']; else: noComponent"></div>
+-->
+<!--
+<div *appIfViewport="'Medium'; else noComponent">
+  <p>Showing content only when the viewport matches</p>
+</div>
+
+<ng-template #noComponent>
+  <div>no component to show in this viewport</div>
+</ng-template>
+
+<app-books-page></app-books-page>
+-->
+
+<router-outlet></router-outlet>

@@ -1,0 +1,26 @@
+<div class="container">
+  <h3>New collection</h3>
+  <form id="newBookCollection" action="#">
+    <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" [formControl]="collectionName" />
+    <button type="button" (click)="createBookCollection()" [disabled]="collectionName.invalid">Create</button>
+    @if (collectionName.invalid && (collectionName.dirty || collectionName.touched)) {
+      <div class="alert alert-danger">
+        @if (collectionName.hasError("required")) {
+          <span>The name is required.</span>
+        }
+      </div>
+    }
+    <p>
+      <span>The new collection will be named: {{ collectionName.value | formatText: "upper-first" }}</span>
+    </p>
+    <p>
+      <span>Form errors: {{ collectionName.errors | json }}</span>
+    </p>
+  </form>
+</div>
+<div class="container">
+  <h3>Tools</h3>
+  <form action="#">
+    <button type="button" (click)="reloadBookCollections()">Reload collections</button>
+  </form>
+</div>

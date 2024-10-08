@@ -1,0 +1,37 @@
+<h3>New book</h3>
+
+<form [formGroup]="myForm" novalidate>
+  <ul>
+    <li>
+      <select [formControl]="myForm.controls.collection">
+        @for (bookCollection of bookCollectionsSignal() | keyvalue; track bookCollection.value.identifier) {
+          <option [value]="bookCollection.value.identifier">{{ bookCollection.value.name }}</option>
+        }
+      </select>
+    </li>
+    <li>
+      <input [formControl]="myForm.controls.name" type="text" placeholder="Name" />
+      <input [formControl]="myForm.controls.author" type="text" placeholder="Author" />
+    </li>
+    <li>
+      <select [formControl]="myForm.controls.genre">
+        @for (genre of genres; track genre) {
+          <option [value]="genre">{{ genre }}</option>
+        }
+      </select>
+      <input [formControl]="myForm.controls.numberOfPages" type="number" placeholder="Pages" />
+    </li>
+    <li>
+      <input [formControl]="myForm.controls.pictureLocation" type="url" title="Picture" placeholder="Picture URL" />
+    </li>
+    <li>
+      <textarea [formControl]="myForm.controls.description" placeholder="Description"></textarea>
+    </li>
+  </ul>
+
+  <div>Form errors (all fields): {{ myForm.errors | json }}</div>
+  <div>Form final value: {{ myForm.value | json }}</div>
+  <div>Form final value (full): {{ myForm.getRawValue() | json }}</div>
+
+  <button type="button" (click)="createBook()">Create</button>
+</form>

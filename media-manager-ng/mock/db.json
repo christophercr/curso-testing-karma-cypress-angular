@@ -1,0 +1,73 @@
+{
+  "collections": [
+    {
+      "id": "1",
+      "name": "Mis libros",
+      "type": "book"
+    },
+    {
+      "id": "2",
+      "name": "Mis fotos",
+      "type": "photo"
+    },
+    {
+      "id": "3",
+      "name": "Mis pelis",
+      "type": "movie"
+    },
+    {
+      "identifier": "2ge2mgc31",
+      "id": "2ge2mgc31",
+      "name": "Nueva Colección",
+      "type": "book",
+      "collection": []
+    }
+  ],
+  "photos": [
+    {
+      "id": "1",
+      "name": "Paris 2024",
+      "description": "Torre Eiffel",
+      "pictureLocation": "https://a-static.besthdwallpaper.com/paris-2024-summer-olympics-eiffel-tower-wallpaper-1680x1050-116451_5.jpg",
+      "collectionId": "2"
+    }
+  ],
+  "books": [
+    {
+      "id": "1",
+      "name": "Angular",
+      "description": "Un libro sobre Angular",
+      "pictureLocation": "https://angular.io/assets/images/logos/angular/angular.png",
+      "genre": "Romance",
+      "author": "John Doe",
+      "numberOfPages": 154,
+      "collectionId": "1"
+    }
+  ],
+  "movies": [
+    {
+      "id": "1",
+      "name": "The Lord of the Rings",
+      "description": "A movie about a ring",
+      "pictureLocation": "https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_QL75_UX380_CR0,1,380,562_.jpg",
+      "genre": "Fantasy",
+      "director": "Peter Jackson",
+      "duration": "201",
+      "collectionId": "3"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "administrator",
+      "password": "1234",
+      "userType": "admin"
+    },
+    {
+      "id": "2",
+      "username": "some user",
+      "password": "abcd",
+      "userType": "readonly"
+    }
+  ]
+}
