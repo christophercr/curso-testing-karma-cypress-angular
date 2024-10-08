@@ -2,10 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewMediaCollectionComponent } from './new-media-collection.component';
 import { BookService } from '../../services/book.service';
+import { inject } from '@angular/core';
+import { delay } from 'rxjs';
 
 describe('NewMediaCollectionComponent', () => {
   let component: NewMediaCollectionComponent;
   let fixture: ComponentFixture<NewMediaCollectionComponent>;
+  let bookService: jasmine.SpyObj<BookService>;
 
   beforeEach(async () => {
     const bookServiceMock = jasmine.createSpyObj('BookService', ['createBookCollection']);
@@ -20,6 +23,7 @@ describe('NewMediaCollectionComponent', () => {
       ],
     }).compileComponents();
 
+    bookService = TestBed.inject(BookService) as jasmine.SpyObj<BookService>;
     fixture = TestBed.createComponent(NewMediaCollectionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -47,6 +51,33 @@ describe('NewMediaCollectionComponent', () => {
 
         expect(spy).toHaveBeenCalledTimes(1);
         expect(spy).toHaveBeenCalledWith();
+      });
+    });
+    describe('collectionCreated', () => {
+      it('debe emitir un evento cuando el botón "Create" es clickado', (done:DoneFn) => {
+        bookService.createBookCollection.and.returnValue(new Promise(
+            (resolve, reject) => {
+              setTimeout(() => {resolve()}, 1000);
+            })
+        );
+
+        bookService.createBookCollection('').then(() => {
+          setTimeout(() => {
+            expect(spy).toHaveBeenCalledTimes(1);
+            expect(spy).toHaveBeenCalledWith('carasui');
+            done();
+          }, 50);
+        })
+
+        const spy = spyOn(component.collectionCreated, 'emit');
+        
+        fixture.componentInstance.collectionName.setValue('carasui');
+        fixture.detectChanges();
+
+        const compiledHtml = fixture.nativeElement as HTMLElement;
+        const button = compiledHtml.querySelector('[data-test="button-create"]') as HTMLButtonElement;
+        console.log(button);
+        button.click();
       });
     });
   });

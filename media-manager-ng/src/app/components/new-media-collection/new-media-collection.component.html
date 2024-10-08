@@ -2,7 +2,7 @@
   <h3>New collection</h3>
   <form id="newBookCollection" action="#">
     <input id="newBookCollectionName" data-test="field-collection-name" type="text" name="collection-name" title="Name" placeholder="Name" [formControl]="collectionName" />
-    <button type="button" (click)="createBookCollection()" [disabled]="collectionName.invalid">Create</button>
+    <button type="button" data-test="button-create" (click)="createBookCollection()" [disabled]="collectionName.invalid">Create</button>
     @if (collectionName.invalid && (collectionName.dirty || collectionName.touched)) {
       <div class="alert alert-danger">
         @if (collectionName.hasError("required")) {
