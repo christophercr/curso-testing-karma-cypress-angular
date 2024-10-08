@@ -6,7 +6,9 @@
     @if (collectionName.invalid && (collectionName.dirty || collectionName.touched)) {
       <div class="alert alert-danger">
         @if (collectionName.hasError("required")) {
-          <span>The name is required.</span>
+          <span data-test="errores-validacion">The name is required.</span>
+        } @if (collectionName.hasError("invalidChars")){
+          <span data-test="errores-validacion">The character is invalid</span>
         }
       </div>
     }

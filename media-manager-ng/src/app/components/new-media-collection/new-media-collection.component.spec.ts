@@ -4,6 +4,7 @@ import { NewMediaCollectionComponent } from './new-media-collection.component';
 import { BookService } from '../../services/book.service';
 import { inject } from '@angular/core';
 import { delay } from 'rxjs';
+import { CollectionNameValidator } from '../../validators/collection-name.validator';
 
 describe('NewMediaCollectionComponent', () => {
   let component: NewMediaCollectionComponent;
@@ -12,14 +13,14 @@ describe('NewMediaCollectionComponent', () => {
 
   beforeEach(async () => {
     const bookServiceMock = jasmine.createSpyObj('BookService', ['createBookCollection']);
-    
+
     await TestBed.configureTestingModule({
       imports: [NewMediaCollectionComponent],
       providers: [
         {
           provide: BookService,
           useValue: bookServiceMock,
-        }
+        },
       ],
     }).compileComponents();
 
@@ -54,11 +55,13 @@ describe('NewMediaCollectionComponent', () => {
       });
     });
     describe('collectionCreated', () => {
-      it('debe emitir un evento cuando el botón "Create" es clickado', (done:DoneFn) => {
-        bookService.createBookCollection.and.returnValue(new Promise(
-            (resolve, reject) => {
-              setTimeout(() => {resolve()}, 1000);
-            })
+      it('debe emitir un evento cuando el botón "Create" es clickado', (done: DoneFn) => {
+        bookService.createBookCollection.and.returnValue(
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              resolve();
+            }, 1000);
+          }),
         );
 
         bookService.createBookCollection('').then(() => {
@@ -67,10 +70,10 @@ describe('NewMediaCollectionComponent', () => {
             expect(spy).toHaveBeenCalledWith('carasui');
             done();
           }, 50);
-        })
+        });
 
         const spy = spyOn(component.collectionCreated, 'emit');
-        
+
         fixture.componentInstance.collectionName.setValue('carasui');
         fixture.detectChanges();
 
@@ -78,6 +81,35 @@ describe('NewMediaCollectionComponent', () => {
         const button = compiledHtml.querySelector('[data-test="button-create"]') as HTMLButtonElement;
         console.log(button);
         button.click();
+      });
+    });
+  });
+
+  describe('Campo de texto', () => {
+    describe('Validaciones', () => {
+      it('debe de mostrar un mensaje de error si no se proporciona nombre de la colección', () => {
+        const compiledHtml = fixture.nativeElement as HTMLElement;
+        const inputBox = compiledHtml.querySelector('[data-test="field-collection-name"]') as HTMLInputElement;
+        inputBox.value = '';
+        inputBox.dispatchEvent(new Event('input')); //HTML
+        fixture.detectChanges();
+        console.log('Hemos seteado el valor');
+        const spanErrores = compiledHtml.querySelector('[data-test="errores-validacion"]') as HTMLSpanElement;
+        expect(spanErrores.textContent).toBe('The name is required.');
+      });
+
+      it('debe de mostrar un mensaje de error si el nombre proporcionado incluye caracteres inválidos', () => {
+        // caracteres inválidos = -*.,
+        const compiledHtml = fixture.nativeElement as HTMLElement;
+        const inputBox = compiledHtml.querySelector('[data-test="field-collection-name"]') as HTMLInputElement;
+        const invalidChars: string[] = ['-', '*', '.', ','];
+        for (const char of invalidChars) {
+          inputBox.value = char;
+          inputBox.dispatchEvent(new Event('input'));
+          fixture.detectChanges();
+          const spanErrores = compiledHtml.querySelector('[data-test="errores-validacion"]') as HTMLSpanElement;
+          expect(spanErrores.textContent).toBe('The character is invalid');
+        }
       });
     });
   });
