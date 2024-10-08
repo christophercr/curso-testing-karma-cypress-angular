@@ -113,4 +113,21 @@ describe('NewMediaCollectionComponent', () => {
       });
     });
   });
+
+  describe('Botón crear', () => {
+    describe('Validaciones', () => {
+      it('Debe habilitarse cuando tiene valor el campo collectionName', () => {
+        const compiledHtml = fixture.nativeElement as HTMLElement;
+        const btn = compiledHtml.querySelector('[data-test="button-create"]') as HTMLButtonElement;
+        const input = compiledHtml.querySelector('[data-test="field-collection-name"]') as HTMLInputElement;
+        const valorInput = 'Carasui';
+        fixture.componentInstance.collectionName.setValue(valorInput);
+        fixture.detectChanges();
+        expect(btn.disabled).toBe(false);
+        fixture.componentInstance.collectionName.setValue('');
+        fixture.detectChanges();
+        expect(btn.disabled).toBe(true);
+      });
+    });
+  });
 });
