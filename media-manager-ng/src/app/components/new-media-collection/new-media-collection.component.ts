@@ -13,6 +13,7 @@ import { CollectionNameValidator } from '../../validators/collection-name.valida
 import { JsonPipe } from '@angular/common';
 import { FormatTextPipe } from '../../pipes/format-text.pipe';
 import { BookService } from '../../services/book.service';
+import { CustomButtonDirective } from '../../directives/custom-button.directive';
 
 export function invalidCharsValidator(regexToTest: RegExp): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -33,7 +34,7 @@ const REGEX_NO_INVALID_CHARS = /^[^-*.,]*$/;
 @Component({
   selector: 'app-new-media-collection',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, FormatTextPipe, JsonPipe],
+  imports: [FormsModule, ReactiveFormsModule, FormatTextPipe, JsonPipe, CustomButtonDirective],
   templateUrl: './new-media-collection.component.html',
   styleUrl: './new-media-collection.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

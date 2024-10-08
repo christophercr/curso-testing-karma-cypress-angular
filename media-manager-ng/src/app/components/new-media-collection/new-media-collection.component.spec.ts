@@ -5,6 +5,8 @@ import { BookService } from '../../services/book.service';
 import { inject } from '@angular/core';
 import { delay } from 'rxjs';
 import { CollectionNameValidator } from '../../validators/collection-name.validator';
+import { By } from '@angular/platform-browser';
+import { CustomButtonDirective } from '../../directives/custom-button.directive';
 
 describe('NewMediaCollectionComponent', () => {
   let component: NewMediaCollectionComponent;
@@ -128,6 +130,36 @@ describe('NewMediaCollectionComponent', () => {
         fixture.detectChanges();
         expect(btn.disabled).toBe(true);
       });
+    });
+  });
+
+  describe('Botones', () => {
+    it('todos los botones deben de tener ligada una directiva CustomDirective', () => {
+      const compiledHtml = fixture.nativeElement as HTMLElement;
+      const allButtons = compiledHtml.querySelectorAll('button[type=button]');
+      const allCustomButtonDirectives = fixture.debugElement.queryAll(By.directive(CustomButtonDirective)); // obtenemos TODAS las instancias de la directiva que buscamos
+
+      expect(allButtons.length).toBe(2);
+      expect(allCustomButtonDirectives.length).toBe(2);
+    });
+
+    it('deben tener los estilos marcados por la directiva CustomDirective', () => {
+      const compiledHtml = fixture.nativeElement as HTMLElement;
+      const buttonCreate = compiledHtml.querySelector('[data-test="button-create"]') as HTMLButtonElement;
+      const buttonReloadCollections = compiledHtml.querySelector('[data-test="btn-reload-collections"]') as HTMLButtonElement;
+
+      // estilos que sabemos de antemano que setea nuestra directiva CustomButtonDirective
+      const expectedStyles: Partial<Record<keyof CSSStyleDeclaration, string>> = {
+        borderRadius: '10px',
+        color: 'white',
+        fontSize: '1rem',
+        fontWeight: 'bold',
+      };
+
+      for (const style in expectedStyles) {
+        expect(buttonCreate.style[style]).toBe(expectedStyles[style] as string);
+        expect(buttonReloadCollections.style[style]).toBe(expectedStyles[style] as string);
+      }
     });
   });
 });
