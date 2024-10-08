@@ -1,7 +1,7 @@
 <div class="container">
   <h3>New collection</h3>
   <form id="newBookCollection" action="#">
-    <input id="newBookCollectionName" type="text" name="collection-name" title="Name" placeholder="Name" [formControl]="collectionName" />
+    <input id="newBookCollectionName" data-test="field-collection-name" type="text" name="collection-name" title="Name" placeholder="Name" [formControl]="collectionName" />
     <button type="button" (click)="createBookCollection()" [disabled]="collectionName.invalid">Create</button>
     @if (collectionName.invalid && (collectionName.dirty || collectionName.touched)) {
       <div class="alert alert-danger">
@@ -21,6 +21,6 @@
 <div class="container">
   <h3>Tools</h3>
   <form action="#">
-    <button type="button" (click)="reloadBookCollections()">Reload collections</button>
+    <button type="button" data-test="btn-reload-collections" (click)="reloadBookCollections()">Reload collections</button>
   </form>
 </div>
