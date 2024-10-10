@@ -61,7 +61,7 @@ describe('NewMediaCollectionComponent', () => {
         bookService.createBookCollection.and.returnValue(
           new Promise((resolve, reject) => {
             setTimeout(() => {
-              resolve();
+              resolve('some id needed because we change the return type to string when implementing BookService tests');
             }, 1000);
           }),
         );

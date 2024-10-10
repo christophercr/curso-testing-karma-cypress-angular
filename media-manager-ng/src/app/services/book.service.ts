@@ -103,7 +103,7 @@ export class BookService extends MediaServiceImpl<Book> {
     );
   }
 
-  async createBookCollection(name: string): Promise<void> {
+  async createBookCollection(name: string): Promise<string> {
     //console.log('Creating a new book collection: ', name);
 
     const newBookCollection: MediaCollection<Book> = new MediaCollection<Book>(Book, 'book', name);
@@ -113,10 +113,11 @@ export class BookService extends MediaServiceImpl<Book> {
       await this.saveMediaCollection(newBookCollection);
       //console.log(
       //`New book collection called "${newBookCollection.name}" saved successfully. Identifier: `,
-      //newBookCollection.identifier,
+      return newBookCollection.identifier;
       //);
     } catch (err) {
       this.displayErrorMessage(`Failed to save the new book collection called ${name}`);
+      throw new Error(`Failed to save the new book collection called ${name}`); 
     }
 
     /* this.saveMediaCollection(newBookCollection)
