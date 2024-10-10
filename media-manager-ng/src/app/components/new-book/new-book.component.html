@@ -3,7 +3,7 @@
 <form [formGroup]="myForm" novalidate>
   <ul>
     <li>
-      <select [formControl]="myForm.controls.collection">
+      <select [formControl]="myForm.controls.collection" data-test="select-collections">
         @for (bookCollection of bookCollectionsSignal() | keyvalue; track bookCollection.value.identifier) {
           <option [value]="bookCollection.value.identifier">{{ bookCollection.value.name }}</option>
         }
@@ -14,7 +14,7 @@
       <input [formControl]="myForm.controls.author" type="text" placeholder="Author" />
     </li>
     <li>
-      <select [formControl]="myForm.controls.genre">
+      <select [formControl]="myForm.controls.genre" data-test="select-genres">
         @for (genre of genres; track genre) {
           <option [value]="genre">{{ genre }}</option>
         }

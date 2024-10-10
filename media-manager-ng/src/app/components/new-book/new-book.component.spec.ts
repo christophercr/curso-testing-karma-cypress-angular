@@ -12,10 +12,16 @@ describe('NewBookComponent', () => {
   let component: NewBookComponent;
   let fixture: ComponentFixture<NewBookComponent>;
   let bookService: jasmine.SpyObj<BookService>;
+  const bookCollectionsSignalStub = signal<Map<string, MediaCollection<Book>>>(new Map());
 
   beforeEach(async () => {
+    const dummyCollections = new Map<string, MediaCollection<Book>>([
+      ['1', new MediaCollection(Book, 'book', 'Primera colección', '1')],
+      ['2', new MediaCollection(Book, 'book', 'Segunda colección', '2')],
+    ]);
+    bookCollectionsSignalStub.set(dummyCollections);
     const bookServiceMock = jasmine.createSpyObj('BookService', ['createBook'], {
-      bookCollectionsSignal: signal<Map<string, MediaCollection<Book>>>,
+      bookCollectionsSignal: bookCollectionsSignalStub,
     });
 
     await TestBed.configureTestingModule({
@@ -120,6 +126,38 @@ describe('NewBookComponent', () => {
         });
 
         (buttonDebugElement.nativeElement as HTMLButtonElement).click();
+      });
+    });
+  });
+
+  describe('select de colecciones', () => {
+    it('debe mostrar por defecto la primera colección seleccionada', () => {
+      const collections = bookCollectionsSignalStub();
+      const firstCollection = collections.values().next().value as MediaCollection<Book>;
+      expect(component.myForm.controls.collection.value).toBeDefined();
+      expect(component.myForm.controls.collection.value).toBe(firstCollection.identifier);
+
+      const compiledHtml = fixture.nativeElement as HTMLElement;
+      const selectCollections = compiledHtml.querySelector('[data-test="select-collections"]') as HTMLSelectElement;
+      expect(selectCollections.value).toBe(firstCollection.identifier);
+    });
+  });
+
+  describe('select de géneros', () => {
+    it('debe mostrar el listado de los géneros posibles a elegir', () => {
+      const genresArray: (keyof typeof Genre)[] = [];
+
+      // crear array a partir del enum
+      for (const key in Genre) {
+        genresArray.push(Genre[key as keyof typeof Genre]);
+      }
+
+      const compiledHtml = fixture.nativeElement as HTMLElement;
+      const genreOptions = compiledHtml.querySelectorAll<HTMLOptionElement>('[data-test="select-genres"] option');
+      expect(genreOptions.length).toBe(genresArray.length);
+
+      genreOptions.forEach((option, index) => {
+        expect(option.value).toBe(genresArray[index]);
       });
     });
   });
