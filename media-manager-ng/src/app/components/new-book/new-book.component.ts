@@ -4,7 +4,7 @@ import { Genre } from '../../constants/genre.constants';
 import { Book } from '../../models/book.model';
 import { AsyncPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { BookService } from '../../services/book.service';
-import { ActivatedRoute } from '@angular/router';
+
 
 @Component({
   selector: 'app-new-book',
@@ -15,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class NewBookComponent implements OnInit {
   private readonly _bookService = inject(BookService);
-  private readonly _currentRoute = inject(ActivatedRoute);
+ 
 
   public bookCollectionsSignal = this._bookService.bookCollectionsSignal;
 

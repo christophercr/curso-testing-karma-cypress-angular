@@ -33,5 +33,5 @@
   <div>Form final value: {{ myForm.value | json }}</div>
   <div>Form final value (full): {{ myForm.getRawValue() | json }}</div>
 
-  <button type="button" (click)="createBook()">Create</button>
+  <button data-test="btn-create-book" type="button" (click)="createBook()">Create</button>
 </form>
