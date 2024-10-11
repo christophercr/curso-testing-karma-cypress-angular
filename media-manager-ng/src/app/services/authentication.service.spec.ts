@@ -4,11 +4,12 @@ import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { User, UserType } from '../models/user.model';
-import { of, switchMap } from 'rxjs';
+import { of, switchMap, throwError } from "rxjs";
+import { TestScheduler } from "rxjs/internal/testing/TestScheduler";
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
- 
+
   let httpService: jasmine.SpyObj<HttpClient>;
   const apiUrl = environment.usersApiUrl;
 
@@ -105,6 +106,61 @@ describe('AuthenticationService', () => {
         error: () => {
           fail('No debe fallar la recuperación de un usuario correcto');
         },
+      });
+    });
+
+    xit('debe reintentar la llamada máximo 3 veces en caso de fallo', (done: DoneFn) => {
+      const numberOfRetries = 3;
+      let retryCount = 0;
+
+      const httpErrorResponse$ = throwError(() => {
+        retryCount++;
+        return new Error('get ERROR');
+      });
+      httpService.get.and.returnValue(httpErrorResponse$);
+
+      service.simulateLogin().subscribe({
+        next: () => {
+          fail('La llamada debe fallar porque estamos probando los reintentos en caso de fallos');
+        },
+        error: () => {
+          expect(retryCount).toEqual(1 + numberOfRetries); // error en la petición inicial + número de reintentos
+          expect(httpService.get).toHaveBeenCalledTimes(1);
+          expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}users`);
+
+          done();
+        },
+      });
+    });
+
+    it('MARBLE TESTING - debe reintentar la llamada máximo 3 veces en caso de fallo', () => {
+      const numberOfRetries = 3;
+      let retryCount = 0;
+
+      const httpErrorResponse$ = throwError(() => {
+        if (retryCount > 0) {
+          console.log('------ retry number', retryCount);
+        }
+        retryCount++;
+        expect(retryCount).toBeLessThanOrEqual(1 + numberOfRetries); // error en la petición inicial + número de reintentos
+        return new Error('get ERROR');
+      });
+      httpService.get.and.returnValue(httpErrorResponse$);
+
+      const testScheduler = new TestScheduler((actual, expected) => {
+        expect(actual).toEqual(expected);
+      });
+
+      testScheduler.run((helpers) => {
+        const { expectObservable, flush } = helpers;
+
+        const expected = '32000ms #'; // 1000 + 4000 + 27000 = 32000 porque hacemos Math.pow(retryCount, retryCount) * 1000
+
+        expectObservable(service.simulateLogin()).toBe(expected, {}, new Error('get ERROR'));
+
+        flush(); // dejar correr 'tiempo virtual' para completar el observable del simulateLogin()
+
+        expect(retryCount).toBe(1 + numberOfRetries); // error en la petición inicial + número de reintentos
       });
     });
   });
