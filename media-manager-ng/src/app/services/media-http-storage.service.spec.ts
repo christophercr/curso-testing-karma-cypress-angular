@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { MediaCollection } from '../models/media-collection.model';
 import { Book } from '../models/book.model';
 import { environment } from '../../environments/environment';
-import { instanceToPlain } from 'class-transformer';
+import { instanceToPlain, plainToClassFromExist } from 'class-transformer';
 import { Genre } from '../constants/genre.constants';
 
 fdescribe('MediaHttpStorageService', () => {
@@ -94,5 +94,51 @@ fdescribe('MediaHttpStorageService', () => {
         });
       });
     });
+  });
+
+  describe('getItem', () => {
+    const deserializeCollection = (serializedCollection: any): MediaCollection<Book> => {
+      return plainToClassFromExist<MediaCollection<Book>, any>(new MediaCollection<Book>(Book, 'book'), serializedCollection);
+    };
+
+      it('Debemos recuperar una colección de libros', (done : DoneFn) =>{
+      const collectionObj =  {
+          "id": "1",
+          "name": "Mis libros",
+          "type": "book",
+          "books": [
+            {
+              "id": "1",
+              "name": "Angular",
+              "description": "Un libro sobre Angular",
+              "pictureLocation": "https://angular.io/assets/images/logos/angular/angular.png",
+              "genre": "Romance",
+              "author": "John Doe",
+              "numberOfPages": 154,
+              "collectionId": "1"
+            }
+          ]
+        };
+        httpService.get.and.returnValue(of(collectionObj));
+
+        service.getItem('1', deserializeCollection,'book').subscribe({
+        
+          next: (collection) => {
+            let libroDummy = new Book("Angular", "Un libro sobre Angular", "https://angular.io/assets/images/logos/angular/angular.png", Genre.Romance, "John Doe", 154, '1');
+            let coleccionDummy = new MediaCollection<Book>(Book, collectionObj.type, collectionObj.name, collectionObj.id);
+            coleccionDummy.addMedia(libroDummy);
+            expect(httpService.get).toHaveBeenCalledTimes(1);
+            expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}collections/1?_embed=books`);
+
+            expect(collection).toEqual(coleccionDummy);
+
+            done();
+          },
+          error: () => {
+            fail('No debe fallar recuperar una colección');
+          },
+        });
+
+      });
   });
 });
