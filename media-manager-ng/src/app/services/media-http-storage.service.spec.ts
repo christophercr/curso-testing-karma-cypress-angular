@@ -32,6 +32,8 @@ fdescribe('MediaHttpStorageService', () => {
 
   afterEach(() => {
     httpService.post.calls.reset();
+    httpService.get.calls.reset();
+    httpService.delete.calls.reset();
   });
 
   describe('saveItem', () => {
@@ -101,44 +103,110 @@ fdescribe('MediaHttpStorageService', () => {
       return plainToClassFromExist<MediaCollection<Book>, any>(new MediaCollection<Book>(Book, 'book'), serializedCollection);
     };
 
-      it('Debemos recuperar una colección de libros', (done : DoneFn) =>{
-      const collectionObj =  {
-          "id": "1",
-          "name": "Mis libros",
-          "type": "book",
-          "books": [
-            {
-              "id": "1",
-              "name": "Angular",
-              "description": "Un libro sobre Angular",
-              "pictureLocation": "https://angular.io/assets/images/logos/angular/angular.png",
-              "genre": "Romance",
-              "author": "John Doe",
-              "numberOfPages": 154,
-              "collectionId": "1"
-            }
-          ]
-        };
-        httpService.get.and.returnValue(of(collectionObj));
-
-        service.getItem('1', deserializeCollection,'book').subscribe({
-        
-          next: (collection) => {
-            let libroDummy = new Book("Angular", "Un libro sobre Angular", "https://angular.io/assets/images/logos/angular/angular.png", Genre.Romance, "John Doe", 154, '1');
-            let coleccionDummy = new MediaCollection<Book>(Book, collectionObj.type, collectionObj.name, collectionObj.id);
-            coleccionDummy.addMedia(libroDummy);
-            expect(httpService.get).toHaveBeenCalledTimes(1);
-            expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}collections/1?_embed=books`);
-
-            expect(collection).toEqual(coleccionDummy);
-
-            done();
+    it('Debemos recuperar una colección de libros', (done: DoneFn) => {
+      const collectionObj = {
+        id: '1',
+        name: 'Mis libros',
+        type: 'book',
+        books: [
+          {
+            id: '1',
+            name: 'Angular',
+            description: 'Un libro sobre Angular',
+            pictureLocation: 'https://angular.io/assets/images/logos/angular/angular.png',
+            genre: 'Romance',
+            author: 'John Doe',
+            numberOfPages: 154,
+            collectionId: '1',
           },
-          error: () => {
-            fail('No debe fallar recuperar una colección');
-          },
-        });
+        ],
+      };
+      httpService.get.and.returnValue(of(collectionObj));
 
+      service.getItem('1', deserializeCollection, 'book').subscribe({
+        next: (collection) => {
+          let libroDummy = new Book(
+            'Angular',
+            'Un libro sobre Angular',
+            'https://angular.io/assets/images/logos/angular/angular.png',
+            Genre.Romance,
+            'John Doe',
+            154,
+            '1',
+          );
+          let coleccionDummy = new MediaCollection<Book>(Book, collectionObj.type, collectionObj.name, collectionObj.id);
+          coleccionDummy.addMedia(libroDummy);
+          expect(httpService.get).toHaveBeenCalledTimes(1);
+          expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}collections/1?_embed=books`);
+
+          expect(collection).toEqual(coleccionDummy);
+
+          done();
+        },
+        error: () => {
+          fail('No debe fallar recuperar una colección');
+        },
       });
+    });
   });
+
+  describe('getAllItems', () => {
+    it('debe hacer la llamada Http para obtener todas las colecciones', (done: DoneFn) => {
+      const mockResponse = [
+        {
+          id: '1',
+          name: 'Libros de ficción',
+          type: 'book',
+        },
+        {
+          id: '2',
+          name: 'Novelas',
+          type: 'book',
+          collection: [],
+        },
+      ];
+
+      httpService.get.and.returnValue(of(mockResponse));
+
+      const deserializationFn = (serializedCollection: any): MediaCollection<Book> => {
+        return plainToClassFromExist<MediaCollection<Book>, any>(new MediaCollection<Book>(Book, 'book'), serializedCollection);
+      };
+
+      service.getAllItems(deserializationFn, 'book').subscribe({
+        next: (retrievedCollections) => {
+          expect(httpService.get).toHaveBeenCalledTimes(1);
+          expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}collections?type=book`);
+
+          let coleccionDummy = new MediaCollection<Book>(Book, mockResponse[0].type, mockResponse[0].name, mockResponse[0].id);
+          let coleccionDummy2 = new MediaCollection<Book>(Book, mockResponse[1].type, mockResponse[1].name, mockResponse[1].id);
+          //expect(retrievedCollections.length).toBe(2);
+          expect(retrievedCollections).toEqual([coleccionDummy, coleccionDummy2]);
+          done();
+        },
+        error: () => {
+          fail('No debe fallar la obtención de todas las colecciones');
+        },
+      });
+    });
+  });
+
+  describe('deleteItem', () => {
+    it('debe hacer la llamada Http para borrar la colección que se le pasa como parámetro', (done: DoneFn) => {
+      const collectionId = 'some id';
+      //const book = new Book('Un libro', 'Buena lectura', 'imagen del libro', Genre.Fantastic, 'un autor', 231, '1');
+      httpService.delete.and.returnValue(of('delete SUCCESS'));
+
+      service.deleteItem(collectionId, 'book').subscribe({
+        next: () => {
+          expect(httpService.delete).toHaveBeenCalledTimes(1);
+          expect(httpService.delete).toHaveBeenCalledWith(`${apiUrl}collections/${collectionId}`);
+          done();
+        },
+        error: () => {
+          fail('No debe fallar el borrado de una colección');
+        },
+      });
+    });
+  });
+
 });

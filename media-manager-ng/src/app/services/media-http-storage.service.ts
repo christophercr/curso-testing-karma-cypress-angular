@@ -117,7 +117,7 @@ export class MediaHttpStorageService implements MediaStorageService {
         const retrievedCollections = collectionsArray.map((item) => {
           // const {id: identifier, name, type} = item; // TODO: definir interface para 'value'
           // const normalizedCollection = {identifier, name, type};
-          const normalizedCollection = { ...item, identifier: item.id }; // TODO: definir interface para respuesta de API
+          const normalizedCollection = { ...item, identifier: item.id, collection: item.collection ?? [] }; // TODO: definir interface para respuesta de API
           return deserializerFn(normalizedCollection);
         });
 
