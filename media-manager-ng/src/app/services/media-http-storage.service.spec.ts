@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
 import { instanceToPlain, plainToClassFromExist } from 'class-transformer';
 import { Genre } from '../constants/genre.constants';
 
-fdescribe('MediaHttpStorageService', () => {
+describe('MediaHttpStorageService', () => {
   let service: MediaHttpStorageService;
   const httpClientMock = jasmine.createSpyObj('HttpClient', ['post', 'delete', 'get']);
   let httpService: jasmine.SpyObj<HttpClient>;

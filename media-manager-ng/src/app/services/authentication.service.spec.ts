@@ -4,15 +4,15 @@ import { AuthenticationService } from './authentication.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { User, UserType } from '../models/user.model';
-import { of } from 'rxjs';
+import { of, switchMap } from 'rxjs';
 
-fdescribe('AuthenticationService', () => {
+describe('AuthenticationService', () => {
   let service: AuthenticationService;
  
   let httpService: jasmine.SpyObj<HttpClient>;
   const apiUrl = environment.usersApiUrl;
 
-  beforeEach(() => { 
+  beforeEach(() => {
     const httpClientMock = jasmine.createSpyObj('HttpClient', ['post', 'delete', 'get']);
     TestBed.configureTestingModule({
       providers: [
@@ -59,6 +59,35 @@ fdescribe('AuthenticationService', () => {
         },
       });
     });
+
+    it('V2 - Debe simular que se ha logado un usuario con un el rol indicado y con credenciales correctas', (done: DoneFn) => {
+      httpService.get.and.returnValue(of(todosLosUsuarios));
+      service
+        .simulateLogin(UserType.ReadOnly)
+        .pipe(
+          // encadenamos la llamada al simulateLogin con otro tipo de usuario
+          switchMap((user) => {
+            expect(user).toEqual(todosLosUsuarios[1]); // todosLosUsuarios[1] contiene el user de tipo readonly
+            expect(httpService.get).toHaveBeenCalledTimes(1);
+            expect(httpService.get).toHaveBeenCalledWith(`${apiUrl}users`);
+            httpService.get.calls.reset();
+
+            return service.simulateLogin(UserType.Admin);
+          }),
+        )
+        .subscribe({
+          next: (userRespuesa) => {
+            expect(httpService.get).toHaveBeenCalledTimes(1);
+            expect(httpService.get).toHaveBeenCalledWith(`${environment.usersApiUrl}users`);
+            expect(userRespuesa).toEqual(todosLosUsuarios[0]); // todosLosUsuarios[0] contiene el user de tipo admin
+            done();
+          },
+          error: () => {
+            fail('No debe fallar la recuperación de un usuario correcto');
+          },
+        });
+    });
+
     it('Debe simular que sin pasar un usuario devuelva uno aleatorio', (done: DoneFn) => {
       httpService.get.and.returnValue(of(todosLosUsuarios));
       expect(service).toBeTruthy();
