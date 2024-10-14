@@ -4,7 +4,7 @@ import { HttpEventType, HttpHandlerFn, HttpInterceptorFn, HttpRequest, HttpRespo
 import { httpAuthorizationInterceptor } from './http-authorization.interceptor';
 import { of } from 'rxjs';
 
-fdescribe('httpAuthorizationInterceptor', () => {
+describe('httpAuthorizationInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => TestBed.runInInjectionContext(() => httpAuthorizationInterceptor(req, next));
 
   beforeEach(() => {
@@ -14,7 +14,7 @@ fdescribe('httpAuthorizationInterceptor', () => {
   it('la cabecera de autorización se añade a las peticiones POST', (done: DoneFn) => {
     const dummyRequest = new HttpRequest('POST', '/some/url', {});
 
-    const dummyHandlerErrorFn: HttpHandlerFn = (request: HttpRequest<unknown>) => {
+    const dummyHandlerSuccessFn: HttpHandlerFn = (request: HttpRequest<unknown>) => {
       const requestHeaders = request.headers.get('X-Authorization');
       expect(requestHeaders).toEqual('my-api-token');
 
@@ -22,7 +22,7 @@ fdescribe('httpAuthorizationInterceptor', () => {
       return of(successResponse);
     };
 
-    interceptor(dummyRequest, dummyHandlerErrorFn).subscribe({
+    interceptor(dummyRequest, dummyHandlerSuccessFn).subscribe({
       next: (response) => {
         done();
       },
@@ -33,17 +33,16 @@ fdescribe('httpAuthorizationInterceptor', () => {
   });
   it('la cabecera de autorización no se añade a las peticiones diferentes de POST', (done: DoneFn) => {
     const dummyRequest = new HttpRequest('GET', '/some/url', {});
-    const dummyHandlerErrorFn: HttpHandlerFn = (request: HttpRequest<unknown>) => {
+    const dummyHandlerSuccessFn: HttpHandlerFn = (request: HttpRequest<unknown>) => {
       const requestHeaders = request.headers.get('X-Authorization');
       expect(requestHeaders).not.toEqual('my-api-token');
       expect(requestHeaders).toBeFalsy();
 
       const successResponse = new HttpResponse({ body: 'response SUCCESS', status: 200 });
       return of(successResponse);
-     
-    };  
+    };
 
-    interceptor(dummyRequest, dummyHandlerErrorFn).subscribe({
+    interceptor(dummyRequest, dummyHandlerSuccessFn).subscribe({
       next: (response) => {
         done();
       },
@@ -51,6 +50,5 @@ fdescribe('httpAuthorizationInterceptor', () => {
         fail('No debe de haber error si la petición Http es exitosa');
       },
     });
-
-  }); 
+  });
 });

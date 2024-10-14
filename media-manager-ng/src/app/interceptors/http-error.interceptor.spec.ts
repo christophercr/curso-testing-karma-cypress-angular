@@ -4,7 +4,7 @@ import { HttpErrorResponse, HttpEventType, HttpInterceptorFn, HttpRequest, HttpR
 import { httpErrorInterceptor } from './http-error.interceptor';
 import { of, throwError } from 'rxjs';
 
-fdescribe('httpErrorInterceptor', () => {
+describe('httpErrorInterceptor', () => {
   const interceptor: HttpInterceptorFn = (req, next) => TestBed.runInInjectionContext(() => httpErrorInterceptor(req, next));
 
   beforeEach(() => {
@@ -39,13 +39,13 @@ fdescribe('httpErrorInterceptor', () => {
   it('no debe hacer nada con la respuesta en caso de que la peticion Http sea exitosa', (done: DoneFn) => {
     const dummyRequest = new HttpRequest('GET', '/some/url');
 
-    const dummyHandlerErrorFn: HttpHandlerFn = (req: HttpRequest<unknown>) => {
+    const dummyHandlerSuccessFn: HttpHandlerFn = (req: HttpRequest<unknown>) => {
       const successResponse = new HttpResponse({ body: 'response SUCCESS', status: 200 });
 
       return of(successResponse);
     };
 
-    interceptor(dummyRequest, dummyHandlerErrorFn).subscribe({
+    interceptor(dummyRequest, dummyHandlerSuccessFn).subscribe({
       next: (response) => {
         expect(response).toBeDefined();
         expect(response.type).toBe(HttpEventType.Response);
