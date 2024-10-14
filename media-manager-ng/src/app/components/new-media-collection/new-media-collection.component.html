@@ -13,7 +13,7 @@
       </div>
     }
     <p>
-      <span>The new collection will be named: {{ collectionName.value | formatText: "upper-first" }}</span>
+      <span data-test="span-formatted-name">The new collection will be named: {{ collectionName.value | formatText: "upper-first" }}</span>
     </p>
     <p>
       <span>Form errors: {{ collectionName.errors | json }}</span>

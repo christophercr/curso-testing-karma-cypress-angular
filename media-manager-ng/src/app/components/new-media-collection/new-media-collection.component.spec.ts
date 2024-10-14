@@ -114,6 +114,28 @@ describe('NewMediaCollectionComponent', () => {
         }
       });
     });
+
+    describe('formato del valor introducido', () => {
+      it('debe poner el nombre formateado con la primera letra en mayúscula', () => {
+        component.collectionName.setValue('un nombre de colección');
+        fixture.detectChanges();
+
+        const compileHtml = fixture.nativeElement as HTMLElement;
+        const span = compileHtml.querySelector<HTMLSpanElement>('[data-test="span-formatted-name"]');
+        expect(span).toBeDefined();
+        expect(span!.textContent).not.toBeNull();
+
+        const texto = span?.textContent ?? ''; // si span = undefined -> valor a obtener es ''
+        const texto2 = span?.textContent || ''; // si span = undefined OR span.textContect falsy ('', null, undefined) -> el valor a obtener es ''
+
+        // distintas maneras de probar que el text content ten
+        expect(span!.textContent).toContain('Un nombre de colección'); // span!.textContent = span existe 100%
+        expect(span?.textContent).toContain('Un nombre de colección'); // span?.textContent = span puede ser algo o indefinido y si es indefinido evalua todo a undefined
+        expect(span!.textContent).toMatch(/Un nombre de colección/);
+        expect(span!.textContent!.match(/Un nombre de colección/)).not.toBeNull();
+        expect(/Un nombre de colección/.test(span!.textContent!)).toBeTrue();
+      });
+    });
   });
 
   describe('Botón crear', () => {
