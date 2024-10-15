@@ -3,9 +3,9 @@
 <ul class="media-type-list">
   <li class="media-type-item">
     <!-- IMPORTANTE: para mejor UX una <a> es más usable, permite abrir la pantalla en otra pestaña -->
-    <a [routerLink]="'/books'">Books</a>
+    <a data-test="link-books-page" [routerLink]="'/books'">Books</a>
   </li>
   <li class="media-type-item">
-    <div>Movies</div>
+    <div data-test="link-movies-page">Movies</div>
   </li>
 </ul>
