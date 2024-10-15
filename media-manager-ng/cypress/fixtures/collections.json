@@ -1,0 +1,36 @@
+[
+    {
+      "id": "1",
+      "name": "Mis libros",
+      "type": "book",
+      "books": [
+        {
+          "id": "1",
+          "name": "Angular",
+          "description": "Un libro sobre Angular",
+          "pictureLocation": "https://angular.io/assets/images/logos/angular/angular.png",
+          "genre": "Romance",
+          "author": "John Doe",
+          "numberOfPages": 154,
+          "collectionId": "1"
+        }
+      ]
+    },
+    {
+      "id": "2ge2mgc31",
+      "name": "Novelas",
+      "type": "book",
+      "books": [
+        {
+          "id": "2",
+          "name": "Señor de los Anillos",
+          "description": "Recomendado",
+          "pictureLocation": "alguna imagen",
+          "genre": "Fiction",
+          "author": "R.R. Tolkien",
+          "numberOfPages": 344,
+          "collectionId": "2ge2mgc31"
+        }
+      ]
+    }
+  ]
