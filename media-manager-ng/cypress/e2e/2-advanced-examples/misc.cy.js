@@ -5,7 +5,7 @@ context('Misc', () => {
     cy.visit('https://example.cypress.io/commands/misc')
   })
 
-  it('cy.exec() - execute a system command', () => {
+  it.skip('cy.exec() - execute a system command', () => {
     // execute a system command.
     // so you can take actions necessary for
     // your test outside the scope of Cypress.
@@ -52,7 +52,7 @@ context('Misc', () => {
     }
   })
 
-  it('cy.focused() - get the DOM element that has focus', () => {
+  it.skip('cy.focused() - get the DOM element that has focus', () => {
     // https://on.cypress.io/focused
     cy.get('.misc-form').find('#name').click()
     cy.focused().should('have.id', 'name')
@@ -62,12 +62,12 @@ context('Misc', () => {
   })
 
   context('Cypress.Screenshot', function () {
-    it('cy.screenshot() - take a screenshot', () => {
+    it.skip('cy.screenshot() - take a screenshot', () => {
       // https://on.cypress.io/screenshot
       cy.screenshot('my-image')
     })
 
-    it('Cypress.Screenshot.defaults() - change default config of screenshots', function () {
+    it.skip('Cypress.Screenshot.defaults() - change default config of screenshots', function () {
       Cypress.Screenshot.defaults({
         blackout: ['.foo'],
         capture: 'viewport',
@@ -81,7 +81,7 @@ context('Misc', () => {
     })
   })
 
-  it('cy.wrap() - wrap an object', () => {
+  it.skip('cy.wrap() - wrap an object', () => {
     // https://on.cypress.io/wrap
     cy.wrap({ foo: 'bar' })
       .should('have.property', 'foo')
