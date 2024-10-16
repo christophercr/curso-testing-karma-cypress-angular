@@ -19,7 +19,9 @@
     "watch": "ng build --watch --configuration development",
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "cy:run:chrome": "cypress run --browser chrome",
+    "cy:run:firefox": "cypress run --browser firefox"
   },
   "dependencies": {
     "@angular/animations": "^18.2.5",
