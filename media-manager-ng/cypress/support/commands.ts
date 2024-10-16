@@ -3,18 +3,28 @@
 // with Intellisense and code completion in your
 // IDE or Text Editor.
 // ***********************************************
-// declare namespace Cypress {
-//   interface Chainable<Subject = any> {
-//     customCommand(param: any): typeof customCommand;
-//   }
-// }
+ declare namespace Cypress {
+   interface Chainable<Subject = any> {
+    // customCommand(param: any): typeof customCommand;
+    assertBookCollectionsUrl(): typeof assertBookCollectionsUrl;
+   }
+ }
 //
 // function customCommand(param: any): void {
 //   console.warn(param);
 // }
+
+function assertBookCollectionsUrl(): void {
+    cy.log('verificando que la ruta actual es /collection-list');
+    cy.url().should('eq', 'http://localhost:4200/books/collection-list');
+    cy.contains('Book Coletions!');
+}
+
 //
 // NOTE: You can use it like so:
 // Cypress.Commands.add('customCommand', customCommand);
+
+Cypress.Commands.add('assertBookCollectionsUrl', assertBookCollectionsUrl);
 //
 // ***********************************************
 // This example commands.js shows you how to

@@ -48,7 +48,7 @@ describe.only('New Media Collection spec', () => {
       });
     });
 
-    it.only('hace petición POST para guardar la colección y posteriormente navega al listado de colecciones', () => {
+    it('hace petición POST para guardar la colección y posteriormente navega al listado de colecciones', () => {
       const postStub = cy.stub().as('postCollection');
 
       cy.intercept('POST', 'http://localhost:3000/collections', (req) => {
@@ -70,8 +70,9 @@ describe.only('New Media Collection spec', () => {
           },
         });
 
-      cy.url().should('eq', 'http://localhost:4200/books/collection-list');
-      cy.contains('Book Colletions!');
+        cy.assertBookCollectionsUrl();
+      //cy.url().should('eq', 'http://localhost:4200/books/collection-list');
+      //cy.contains('Book Colletions!');
     });
   });
 });

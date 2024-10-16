@@ -1,5 +1,6 @@
 describe('Home Page spec', () => {
   beforeEach(() => {
+    cy.intercept('GET', 'http://localhost:3000/users', { fixture: 'users.json' }).as('getUsers');
     cy.visit('http://localhost:4200/');
   });
 
@@ -9,8 +10,9 @@ describe('Home Page spec', () => {
 
       cy.get('[data-test="link-books-page"]').click();
 
-      cy.url().should('eq', 'http://localhost:4200/books/collection-list');
-      cy.contains('Book Colletions!');
+      cy.assertBookCollectionsUrl();
+      //cy.url().should('eq', 'http://localhost:4200/books/collection-list');
+      //cy.contains('Book Colletions!');
     });
   });
 

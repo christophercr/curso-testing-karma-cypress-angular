@@ -11,9 +11,10 @@ describe('Books page', () => {
 
   describe('navega a la ruta esperada', () => {
     it('renderiza la página books', () => {
-      cy.contains('Book Colletions!');
-      cy.url().should('eq', 'http://localhost:4200/books/collection-list');
-      cy.contains('Book Colletions!');
+      //cy.contains('Book Colletions!');
+      //cy.url().should('eq', 'http://localhost:4200/books/collection-list');
+      //cy.contains('Book Colletions!');
+      cy.assertBookCollectionsUrl();
       cy.wait(['@getUsers', '@getColletions', '@getFirstCollection', '@getSecondCollection'])/* .then((event) =>  {
         debugger 
       });*/
