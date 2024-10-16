@@ -21,7 +21,7 @@ describe('Books page', () => {
   });
   
   describe('hacer click en una colección', () => {
-    it.only('expande la colección y muestra los libros que contiene', () => {
+    it('expande la colección y muestra los libros que contiene', () => {
       cy.get('[data-test="accordion-tab"]')
         .first()
         .click()
