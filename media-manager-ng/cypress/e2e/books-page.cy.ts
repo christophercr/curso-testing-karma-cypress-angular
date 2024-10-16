@@ -19,4 +19,13 @@ describe('Books page', () => {
       });*/
     });
   });
+  
+  describe('hacer click en una colección', () => {
+    it.only('expande la colección y muestra los libros que contiene', () => {
+      cy.get('[data-test="accordion-tab"]')
+        .first()
+        .click()
+        .find('[data-test="book-table-tr"]').should('have.length', 1);
+    });
+  });
 });

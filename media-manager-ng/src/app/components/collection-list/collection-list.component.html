@@ -9,6 +9,7 @@
       [attr.id]="'accordion-header-' + $index"
       [attr.aria-expanded]="accordionItem.expanded"
       [attr.aria-controls]="'accordion-body-' + $index"
+      data-test="accordion-tab"
     >
       <div class="example-accordion-item-header" (click)="accordionItem.toggle()">
         {{ bookCollection.value.name }}

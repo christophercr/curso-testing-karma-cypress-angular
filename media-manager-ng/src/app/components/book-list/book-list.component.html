@@ -12,7 +12,7 @@
   </thead>
   <tbody>
     @for (book of books; track book.identifier) {
-      <tr>
+      <tr data-test="book-table-tr">
         <td>
           <img [src]="book.pictureLocation" class="mediaImage" />
         </td>
