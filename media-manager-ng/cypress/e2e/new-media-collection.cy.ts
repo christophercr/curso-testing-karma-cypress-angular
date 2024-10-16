@@ -34,19 +34,44 @@ describe.only('New Media Collection spec', () => {
         // .should('have.attr','disabled')
         .should('be.disabled');
       cy.get('[data-test="field-collection-name"]').type('hola');
-      cy.get('[data-test="button-create"]').should('be.enabled');   
+      cy.get('[data-test="button-create"]').should('be.enabled');
       // borra el último caracter introducido
-      //cy.get('[data-test="field-collection-name"]').type('{del}')         
-      cy.get('[data-test="field-collection-name"]').clear().type('hol'); 
-      cy.get('[data-test="button-create"]').should('be.disabled');  
-      //cy.get('[data-test="field-collection-name"]').clear().type('*'); 
-      //cy.get('[data-test="button-create"]').should('be.disabled');  
-      // para probar todos los caracteres erróneos   
+      //cy.get('[data-test="field-collection-name"]').type('{del}')
+      cy.get('[data-test="field-collection-name"]').clear().type('hol');
+      cy.get('[data-test="button-create"]').should('be.disabled');
+      //cy.get('[data-test="field-collection-name"]').clear().type('*');
+      //cy.get('[data-test="button-create"]').should('be.disabled');
+      // para probar todos los caracteres erróneos
       ['-', '*', '.', ','].forEach((char) => {
         cy.get('[data-test="field-collection-name"]').clear().type(`nueva${char}colección`);
         cy.get('[data-test="button-create"]').should('be.disabled');
       });
-      
+    });
+
+    it.only('hace petición POST para guardar la colección y posteriormente navega al listado de colecciones', () => {
+      const postStub = cy.stub().as('postCollection');
+
+      cy.intercept('POST', 'http://localhost:3000/collections', (req) => {
+        postStub(req);
+        req.reply({ statusCode: 200 });
+      });
+
+      cy.get('[data-test="field-collection-name"]').type('nueva colección');
+      cy.get('[data-test="button-create"]').should('be.enabled').click();
+
+      cy.get('@postCollection').its('callCount').should('eq', 1);
+      cy.get('@postCollection').should('have.callCount', 1);
+      cy.get('@postCollection')
+        .should('have.been.calledOnce')
+        .should('have.been.calledWithMatch', {
+          body: {
+            name: 'nueva colección',
+            type: 'book',
+          },
+        });
+
+      cy.url().should('eq', 'http://localhost:4200/books/collection-list');
+      cy.contains('Book Colletions!');
     });
   });
 });
