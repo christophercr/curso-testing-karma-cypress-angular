@@ -27,4 +27,26 @@ describe.only('New Media Collection spec', () => {
         .should('have.css', 'background-color', 'rgb(100, 149, 237)');
     });
   });
+
+  describe('el botón Create', () => {
+    it('se habilita sólo cuando el valor del campo de texto es válido (longitud mínima de 4 y no contiene caracteres inválidos)', () => {
+      cy.get('[data-test="button-create"]')
+        // .should('have.attr','disabled')
+        .should('be.disabled');
+      cy.get('[data-test="field-collection-name"]').type('hola');
+      cy.get('[data-test="button-create"]').should('be.enabled');   
+      // borra el último caracter introducido
+      //cy.get('[data-test="field-collection-name"]').type('{del}')         
+      cy.get('[data-test="field-collection-name"]').clear().type('hol'); 
+      cy.get('[data-test="button-create"]').should('be.disabled');  
+      //cy.get('[data-test="field-collection-name"]').clear().type('*'); 
+      //cy.get('[data-test="button-create"]').should('be.disabled');  
+      // para probar todos los caracteres erróneos   
+      ['-', '*', '.', ','].forEach((char) => {
+        cy.get('[data-test="field-collection-name"]').clear().type(`nueva${char}colección`);
+        cy.get('[data-test="button-create"]').should('be.disabled');
+      });
+      
+    });
+  });
 });
