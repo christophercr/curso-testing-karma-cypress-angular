@@ -1,4 +1,4 @@
-describe.only('New Media Collection spec', () => {
+describe('New Media Collection spec', () => {
   const collectionsJson = require('../fixtures/collections.json');
   const firstCollections = collectionsJson[0];
 
@@ -25,6 +25,12 @@ describe.only('New Media Collection spec', () => {
         .should('have.css', 'background-color', 'rgb(255, 0, 0)')
         .trigger('mouseleave')
         .should('have.css', 'background-color', 'rgb(100, 149, 237)');
+    });
+
+    it('limpia el valor del campo campo de texto', () => {
+      cy.get('[data-test="field-collection-name"]').as('fieldCollectionName').type('nueva colección');
+      cy.get('[data-test="btn-reload-collections"]').click();
+      cy.get('@fieldCollectionName').should('have.value', '');
     });
   });
 
