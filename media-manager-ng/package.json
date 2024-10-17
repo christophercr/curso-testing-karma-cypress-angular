@@ -21,7 +21,8 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cy:run:chrome": "cypress run --browser chrome",
-    "cy:run:firefox": "cypress run --browser firefox"
+    "cy:run:firefox": "cypress run --browser firefox",
+    "cy:run:record": "cypress run --record --key <the-secret-record-key-given-by-cypress-cloud>"
   },
   "dependencies": {
     "@angular/animations": "^18.2.5",
