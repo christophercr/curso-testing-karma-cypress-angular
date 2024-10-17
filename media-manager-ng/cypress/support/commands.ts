@@ -17,7 +17,7 @@
 function assertBookCollectionsUrl(): void {
     cy.log('verificando que la ruta actual es /collection-list');
     cy.url().should('eq', 'http://localhost:4200/books/collection-list');
-    cy.contains('Book Coletions!');
+    cy.contains('Book Colletions!');
 }
 
 //
